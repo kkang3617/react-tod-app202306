@@ -4,7 +4,7 @@ import './scss/TodoHeader.scss'
 
 const TodoHeader = ( {count} ) => {
 
-  const today = new Date();
+  const today = new Date(); 
 
   const dateString = today.toLocaleDateString('ko-KR', {
       year: 'numeric',
