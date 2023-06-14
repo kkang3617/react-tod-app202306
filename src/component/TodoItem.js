@@ -5,13 +5,13 @@ import cn from 'classnames'
 
 import './scss/TodoItem.scss'
 
-const TodoItem = ({ item, remove }) => {
+const TodoItem = ({ item, remove, check }) => {
 
   const {id, title, done} = item;
 
   return (
     <li className='todo-list-item'>
-        <div className={cn('check-circle', {active:done})}>
+        <div className={cn('check-circle', {active:done})} onClick={() => check(id)}>
             {done && <MdDone/>} {/*done이 true일때 MdDone이 보임*/}
         </div>
         <span className={cn('text', {finish:done})}>{title}</span>

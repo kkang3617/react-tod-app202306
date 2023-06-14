@@ -80,6 +80,31 @@ const makeNewId= () => {
     // 삭제 항목은 id=3이라 가정할때 id=1,2,4 (true) 가 새 배열로 리턴.
   };
 
+  // 할 일 체크 처리 함수
+  const checkTodo = id => {
+    // console.log(`체크한 Todo id: ${id}`);
+    
+    // const copyTodos = [...todos];
+    // for(let cTodo of copyTodos) {
+    //   if(cTodo.id === id) {
+    //     cTodo.done = !cTodo.done;
+    //   }
+    // }
+    
+    // setTodos(copyTodos);
+
+    setTodos(todos.map(todo => todo.id === id ? {...todo, 'done': !todo.done} : todo)); //삼항연산식
+
+  }
+
+  //체크가 안 된 할 일의 개수 카운트 하기
+  const countRestTodo = () => {
+    return todos.filter(todo => !todo.done).length; 
+  }
+  // 새로운 배열을 받음 !todo.done 의미 할일 체크 x
+    
+
+
   //랜더링
   useEffect(() => {
     console.log(todos);
@@ -87,8 +112,8 @@ const makeNewId= () => {
 
   return (
     <div className='TodoTemplate'>
-        <TodoHeader/> {/* 자식 컴포넌트들*/}
-        <TodoMain todoList={todos} remove={removeTodo}/>
+        <TodoHeader count={countRestTodo}/> {/* 자식 컴포넌트들*/}
+        <TodoMain todoList={todos} remove={removeTodo} check={checkTodo}/>
         <TodoInput addTodo={addTodo}/>
     </div>
   );
