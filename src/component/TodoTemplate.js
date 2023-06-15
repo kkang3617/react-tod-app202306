@@ -94,6 +94,7 @@ const makeNewId= () => {
     // setTodos(copyTodos);
 
     setTodos(todos.map(todo => todo.id === id ? {...todo, 'done': !todo.done} : todo)); //삼항연산식
+                                     //...todo: 값을 그대로가져오고..
 
   }
 
