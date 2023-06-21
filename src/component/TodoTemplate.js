@@ -8,31 +8,11 @@ import './scss/TodoTemplate.scss';
 const TodoTemplate = () => {
 
   // 서버에 할일 목록(json)을 요청(fetch)해서 받아와야 함.
+  const API_BASE_URL = 'http://localhost:8181/api/todos';
   
 
   //todos 배열을 상태 관리
-  const [todos, setTodos] = useState([
-    {
-      id : 1,
-      title: '아침 산책하기' ,
-      done: false
-    },
-    {
-      id : 2,
-      title: '오늘 주간 신문 읽기' ,
-      done: true
-    },
-    {
-      id : 3,
-      title: '빵 묵기' ,
-      done: false
-    },
-    {
-      id : 4,
-      title: '운동하기' ,
-      done: false
-    },
-  ])
+  const [todos, setTodos] = useState([]);
 
 // id 값 시퀀스 생성함수 
 const makeNewId= () => {
@@ -50,9 +30,7 @@ const makeNewId= () => {
     // console.log('할 일 정보: ', todoText);
 
     const newTodo = {
-      id : makeNewId(),
-      title : todoText,
-      done : false
+      title: todoText
     };
 
     // todos.push(newTodo); (x) -> useState를 사용해서 안됨!!!
@@ -66,7 +44,17 @@ const makeNewId= () => {
     // copyTodos.push(newTodo);
     // setTodos(todos.concat([newTodo])); //두 배열을 합침
 
-    setTodos([...todos, newTodo]);
+    fetch(API_BASE_URL, {
+      method : 'post',
+      headers : {'content-type' : 'application/json'},
+      body : JSON.stringify(newTodo)
+    })
+    .then(res => res.json())
+    .then(json => {
+      setTodos(json.todos);
+
+    })
+
   }
 
   // 할 일 삭제 처리 함수
@@ -75,13 +63,35 @@ const makeNewId= () => {
     
     // 주어진 배열의 값들을 순회하여 조건에 맞는 요소들만 모아서
     // 새로운 배열로 리턴해 주는 함수.
-    setTodos(todos.filter(todo => todo.id !== id));
+    // setTodos(todos.filter(todo => todo.id !== id));
     // id= 1 , 2, 3, 4 가 있고 
     // 삭제 항목은 id=3이라 가정할때 id=1,2,4 (true) 가 새 배열로 리턴.
+
+    fetch(`${API_BASE_URL}/${id}`, {
+      method : 'DELETE',
+    })
+    .then(res => res.json())
+    .then(json => {
+      setTodos(json.todos);
+      
+    });
+    
   };
 
   // 할 일 체크 처리 함수
-  const checkTodo = id => {
+  const checkTodo = (id, done) => {
+
+    fetch(API_BASE_URL, {
+      method: 'PUT',
+      headers: {'content-type' : 'application/json'}, //application/json 타입 지정
+      body : JSON.stringify({ //바디에 json데이터 변환해서 보냄.
+        'done' : !done,   // body 안의 데이터
+        'id' : id
+      })
+    })
+    .then(res => res.json())
+    .then(json => setTodos(json.todos));
+
     // console.log(`체크한 Todo id: ${id}`);
     
     // const copyTodos = [...todos];
@@ -93,8 +103,7 @@ const makeNewId= () => {
     
     // setTodos(copyTodos);
 
-    setTodos(todos.map(todo => todo.id === id ? {...todo, 'done': !todo.done} : todo)); //삼항연산식
-                                     //...todo: 값을 그대로가져오고..
+    
 
   }
 
@@ -108,8 +117,18 @@ const makeNewId= () => {
 
   //랜더링
   useEffect(() => {
-    console.log(todos);
-  }, [todos]); //todos라는 배열에 변화가 있을 때~
+    
+    //페이지가 렌더링 됨과 동시에 할 일 목록을 요청해서 뿌려 주겠다.
+    fetch(API_BASE_URL)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json.todos);
+
+        //fetch를 통해 받아온 데이터를 상태 변수에 할당.
+        setTodos(json.todos);
+      });
+
+  }, []); //[]배열에 변화가 있을 때~
 
   return (
     <div className='TodoTemplate'>
