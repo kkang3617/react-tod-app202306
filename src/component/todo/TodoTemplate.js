@@ -14,11 +14,11 @@ const TodoTemplate = () => {
   //todos 배열을 상태 관리
   const [todos, setTodos] = useState([]);
 
-// id 값 시퀀스 생성함수 
-const makeNewId= () => {
-  if(todos.length === 0)return 1;
-  return todos[todos.length - 1 ].id + 1;
-}
+  // id 값 시퀀스 생성함수 
+  const makeNewId= () => {
+    if(todos.length === 0)return 1;
+    return todos[todos.length - 1 ].id + 1;
+  }
 
 
   // todoInput에게 todoText를 받아오는 함수
@@ -45,7 +45,7 @@ const makeNewId= () => {
     // setTodos(todos.concat([newTodo])); //두 배열을 합침
 
     fetch(API_BASE_URL, {
-      method : 'post',
+      method : 'POST',
       headers : {'content-type' : 'application/json'},
       body : JSON.stringify(newTodo)
     })
@@ -53,7 +53,7 @@ const makeNewId= () => {
     .then(json => {
       setTodos(json.todos);
 
-    })
+    });
 
   }
 
