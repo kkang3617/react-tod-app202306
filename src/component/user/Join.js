@@ -225,7 +225,7 @@ const Join = () => {
     const fetchSignUpPost = () => {
         fetch(API_BASE_URL, {
             method: 'POST',
-            headers: {'content-type' : 'appication/json'},
+            headers: {'content-type' : 'application/json'},
             body: JSON.stringify(userValue)
         })
         .then(res => {
