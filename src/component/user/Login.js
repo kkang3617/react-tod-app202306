@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Button, Container, Grid,
   TextField, Typography, Link} from "@mui/material";
 
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { API_BASE_URL as BASE, USER } from '../../config/host-config';
 import AuthContext from '../../util/AuthContext';
+import CustomSnackBar from '../layout/CustomSnackBar';
 
 const Login = () => {
 
@@ -14,6 +15,16 @@ const Login = () => {
   //AuthContext에서 onLogin 함수를 가져온다.
   const {onLogin, isLoggedIn} = useContext(AuthContext);
 
+  const [open, setOpen] = useState(false); // 초기값 false
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      setOpen(true);
+      setTimeout(() => {
+        redirection('/'); //홈화면 이동
+      }, 3000);
+    }
+  }, [isLoggedIn, redirection]); // []안 변화가 있을 때 랜더링
 
   const REQUEST_URL = BASE + USER + '/signin';
   
@@ -99,54 +110,59 @@ const Login = () => {
 
 
   return (
-    <Container component="main" maxWidth="xs" style={{ margin: "200px auto" }}>
-        <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <Typography component="h1" variant="h5">
-                    로그인
-                </Typography>
-            </Grid>
-        </Grid>
-
-        <form noValidate onSubmit={loginHandler}>
-
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="email"
-                        label="email address"
-                        name="email"
-                        autoComplete="email"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        name="password"
-                        label="on your password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                    >
-                        로그인
-                    </Button>
-                </Grid>
-            </Grid>
-        </form>
-    </Container>
+    <>
+      {!isLoggedIn &&  // 로그인 중이라면 뒤쪽 코드 안보임.
+      <Container component="main" maxWidth="xs" style={{ margin: "200px auto" }}>
+          <Grid container spacing={2}>
+              <Grid item xs={12}>
+                  <Typography component="h1" variant="h5">
+                      로그인
+                  </Typography>
+              </Grid>
+          </Grid>
+          <form noValidate onSubmit={loginHandler}>
+              <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                      <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="email"
+                          label="email address"
+                          name="email"
+                          autoComplete="email"
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
+                      <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          name="password"
+                          label="on your password"
+                          type="password"
+                          id="password"
+                          autoComplete="current-password"
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
+                      <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                      >
+                          로그인
+                      </Button>
+                  </Grid>
+              </Grid>
+          </form>
+      </Container>
+      }
+      <CustomSnackBar
+        open={open}
+      />
+    </>
   );
 }
 
