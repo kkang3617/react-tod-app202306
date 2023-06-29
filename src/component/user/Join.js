@@ -233,7 +233,7 @@ const Join = () => {
     // 이미지 파일을 선택했을 때 썸네일 뿌리기
     const showThumbnailHandler = e => {
         //첨부된 파일 정보
-        const file = $fileTag.current.files[0];
+        const file = $fileTag.current.files[0]; //$fileTag = input태그
 
         const reader = new FileReader();
         reader.readAsDataURL(file)
@@ -319,7 +319,7 @@ const Join = () => {
                                 <img
                                     //src={require("../../assets/img/image-add.png")}
                                     //src={imgFile ? imgFile : require("../../assets/img/image-add.png")}
-                                    src={imgFile || require("../../assets/img/image-add.png")}
+                                    src={imgFile || require("../../assets/img/image-add.png")} // 좌항 true 뜨면 우항 실행안됨.
                                     alt="profile"
 
                                 />
